@@ -1,3 +1,5 @@
+import { handleSpin } from "./api.js";
+
 const config = {
   type: Phaser.AUTO,
   width: 1000,
@@ -36,7 +38,7 @@ function create() {
 
   document.body.appendChild(spinButton);
 
-  // spinButton.addEventListener("click", handleSpin);
+  spinButton.addEventListener("click", handleSpin);
 
   const symbolWidth = 100;
   const symbolHeight = 100;
