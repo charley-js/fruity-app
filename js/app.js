@@ -24,7 +24,15 @@ function preload() {
 }
 
 let reels = [[], [], []];
-const symbols = ["apple", "banana", "cherries", "lemon", "strawberry", "watermelon"];
+
+const symbols = {
+  "🍎": "apple",
+  "🍌": "banana",
+  "🍒": "cherries",
+  "🍋": "lemon",
+  "🍓": "strawberry",
+  "🍉": "watermelon",
+};
 
 function create() {
   const spinButton = document.createElement("button");
@@ -38,7 +46,12 @@ function create() {
 
   document.body.appendChild(spinButton);
 
-  spinButton.addEventListener("click", handleSpin);
+  spinButton.addEventListener("click", () => {
+    handleSpin().then((res) => {
+      console.log(res);
+      this.updateReels(res.symbols);
+    });
+  });
 
   const symbolWidth = 100;
   const symbolHeight = 100;
@@ -49,8 +62,12 @@ function create() {
 
   for (let i = 0; i < 3; i++) {
     for (let j = 0; j < 3; j++) {
-      const randomSymbol = Phaser.Math.RND.pick(symbols);
-      const symbolImage = this.add.image(reelXStart + i * reelSpacingX, reelYStart + j * symbolSpacingY, randomSymbol);
+      const randomSymbol = Phaser.Math.RND.pick(Object.keys(symbols));
+      const symbolImage = this.add.image(
+        reelXStart + i * reelSpacingX,
+        reelYStart + j * symbolSpacingY,
+        symbols[randomSymbol]
+      );
 
       symbolImage.displayWidth = symbolWidth;
       symbolImage.displayHeight = symbolHeight;
@@ -59,3 +76,20 @@ function create() {
     }
   }
 }
+
+function updateReels(fruits) {
+  reels.forEach((reel) => {
+    reel.forEach((symbol) => symbol.destroy());
+  });
+
+  for (let i = 0; i < fruits.length; i++) {
+    const symbolKey = symbols[fruits[i]];
+    const symbolImage = this.add.image(200 + i * 120, 100, symbolKey);
+
+    symbolImage.displayWidth = 100;
+    symbolImage.displayHeight = 100;
+    reels[i] = [symbolImage];
+  }
+}
+
+Phaser.Scene.prototype.updateReels = updateReels;
