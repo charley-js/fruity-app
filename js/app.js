@@ -41,8 +41,8 @@ function create() {
   const spinButton = document.createElement("button");
   spinButton.innerText = "SPIN";
   spinButton.style.position = "absolute";
-  spinButton.style.top = "500px";
-  spinButton.style.left = "400px";
+  spinButton.style.top = "625px";
+  spinButton.style.right = "745px";
   spinButton.style.padding = "10px 20px";
   spinButton.style.fontSize = "20px";
   spinButton.style.cursor = "pointer";
@@ -75,7 +75,7 @@ function create() {
 
   const symbolWidth = 100;
   const symbolHeight = 100;
-  const reelXStart = 200;
+  const reelXStart = config.width / 2 - 150;
   const reelYStart = 100;
   const reelSpacingX = 120;
   const symbolSpacingY = 120;
@@ -102,13 +102,40 @@ function updateReels(fruits) {
     reel.forEach((symbol) => symbol.destroy());
   });
 
-  for (let i = 0; i < fruits.length; i++) {
-    const symbolKey = symbols[fruits[i]];
-    const symbolImage = this.add.image(200 + i * 120, 100, symbolKey);
+  const reelXStart = config.width / 2 - 150;
+  const symbolWidth = 100;
+  const symbolHeight = 100;
+  const symbolSpacingY = 120;
 
-    symbolImage.displayWidth = 100;
-    symbolImage.displayHeight = 100;
-    reels[i] = [symbolImage];
+  for (let i = 0; i < 3; i++) {
+    const symbolKey = symbols[fruits[i]];
+
+    const symbolImageMiddle = this.add.image(reelXStart + i * 120, 100 + symbolSpacingY, symbolKey);
+
+    symbolImageMiddle.displayWidth = symbolWidth;
+    symbolImageMiddle.displayHeight = symbolHeight;
+
+    reels[i].push(symbolImageMiddle);
+  }
+
+  for (let i = 0; i < 3; i++) {
+    const randomSymbolTop = Phaser.Math.RND.pick(Object.keys(symbols));
+    const symbolImageRandomTop = this.add.image(reelXStart + i * 120, 100, symbols[randomSymbolTop]);
+
+    symbolImageRandomTop.displayWidth = symbolWidth;
+    symbolImageRandomTop.displayHeight = symbolHeight;
+    reels[i].unshift(symbolImageRandomTop);
+
+    const randomSymbolBottom = Phaser.Math.RND.pick(Object.keys(symbols));
+    const symbolImageRandomBottom = this.add.image(
+      reelXStart + i * 120,
+      100 + symbolSpacingY * 2,
+      symbols[randomSymbolBottom]
+    );
+
+    symbolImageRandomBottom.displayWidth = symbolWidth;
+    symbolImageRandomBottom.displayHeight = symbolHeight;
+    reels[i].push(symbolImageRandomBottom);
   }
 }
 
