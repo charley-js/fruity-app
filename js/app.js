@@ -34,6 +34,9 @@ const symbols = {
   "🍉": "watermelon",
 };
 
+let balanceText;
+let payoutText;
+
 function create() {
   const spinButton = document.createElement("button");
   spinButton.innerText = "SPIN";
@@ -46,10 +49,27 @@ function create() {
 
   document.body.appendChild(spinButton);
 
+  balanceText = document.createElement("div");
+  balanceText.style.position = "absolute";
+  balanceText.style.top = "20px";
+  balanceText.style.left = "20px";
+  balanceText.style.color = "white";
+  balanceText.style.fontSize = "20px";
+  document.body.appendChild(balanceText);
+
+  payoutText = document.createElement("div");
+  payoutText.style.position = "absolute";
+  payoutText.style.top = "50px";
+  payoutText.style.left = "20px";
+  payoutText.style.color = "white";
+  payoutText.style.fontSize = "20px";
+  document.body.appendChild(payoutText);
+
   spinButton.addEventListener("click", () => {
     handleSpin().then((res) => {
       console.log(res);
       this.updateReels(res.symbols);
+      updateBalanceAndPayout(res.balance, res.payout);
     });
   });
 
@@ -90,6 +110,11 @@ function updateReels(fruits) {
     symbolImage.displayHeight = 100;
     reels[i] = [symbolImage];
   }
+}
+
+function updateBalanceAndPayout(balance, payout) {
+  balanceText.innerText = `Balance: $${balance}`;
+  payoutText.innerText = `Payout: $${payout}`;
 }
 
 Phaser.Scene.prototype.updateReels = updateReels;
